@@ -29,7 +29,7 @@
 # 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro #
 # ========================================================================= #
 
-# $Id: example-wrapper.R,v 1.9 2003/09/29 21:52:07 mbiro Exp $ #
+# $Id: example-wrapper.R,v 1.10 2004/04/01 08:56:31 mbiro Exp $ #
 
 race.init<-function(){
   # Load libraries and data
@@ -95,11 +95,15 @@ race.wrapper<-function(candidate,task,data){
   training.set<-data$iris[-idx,]
   # nnet is too vocal :)
   # We better redirect output to /dev/null for a while
-  dev.null<-file("/dev/null",open="w");sink(dev.null)
+  # ONLY UNDER UNIX...
+  if (.Platform$OS.type=="unix"){
+    dev.null<-file("/dev/null",open="w");sink(dev.null)}
   nn<-nnet(Species~.,data=training.set,maxit=10,
            size=data$candidates[candidate,"size"],
            decay=data$candidates[candidate,"decay"])
-  sink(NULL);close(dev.null)
+  # ONLY UNDER UNIX...
+  if (.Platform$OS.type=="unix"){
+    sink(NULL);close(dev.null)}
   
   # Test the network on hold-out examples
   unseen.input<-data$iris[idx,1:4]
