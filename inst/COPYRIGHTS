@@ -1,0 +1,23 @@
+* The function `aux2.friedman' defined in `R/race.R' containes some
+  lines I copied from the function `friedman.test.default' of the
+  `ctest' package which is licensed under the terms of the GNU GENERAL
+  PUBLIC LICENSE. Since no precise copyright notice is given in the
+  package `ctest', I assume that the copyright holder is the R Core
+  Team.  I reproduce here the file DESCRIPTION of the package
+  `ctest', with the complete list of all authors:
+
+    Package: ctest
+    Version: 1.7.1
+    Priority: base
+    Title: Classical Tests
+    Author: Kurt Hornik <Kurt.Hornik@ci.tuwien.ac.at>, with major
+      contributions by Peter Dalgaard <p.dalgaard@kubism.ku.dk> and
+      Torsten Hothorn <Torsten.Hothorn@rzmail.uni-erlangen.de>.
+    Maintainer: R Core Team <R-core@r-project.org>
+    Description: A collection of classical tests, including the
+      Ansari-Bradley, Bartlett, chi-squared, Fisher, Kruskal-Wallis,
+      Kolmogorov-Smirnov, t, and Wilcoxon tests.
+    License: GPL
+
+
+* The rest of the package `race' is copyrighted by Mauro Birattari
