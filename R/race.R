@@ -29,7 +29,7 @@
 # 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro #
 # ========================================================================= #
 
-# $Id: race.R,v 1.46 2004/03/23 12:07:52 mbiro Exp $ #
+# $Id: race.R,v 1.47 2004/04/02 12:41:57 mbiro Exp $ #
 
 # Configuration variables
 .race.warn.quiet<--1
@@ -82,7 +82,7 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
   if (!is.character(wrapper.file))
     stop("Option \"wrapper.file\" must be a string")
   wrapper.file<-path.expand(wrapper.file)       
-  if (substr(wrapper.file,1,1)!="/")
+  if (substr(wrapper.file,1,1)!=.Platform$file.sep)
     wrapper.file<-file.path(getwd(),wrapper.file)
   try(source(wrapper.file,local=TRUE),silent=TRUE)
   if (!exists(.slave.wrapper.function,inherits=FALSE,mode="function")||

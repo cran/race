@@ -1,6 +1,6 @@
 Package: race
-Version: 0.1-47
-Date: $Date: 2004/04/01 08:56:31 $
+Version: 0.1-48
+Date: $Date: 2004/04/02 12:41:57 $
 Title: Racing methods for the selection of the best
 Author: Mauro Birattari <mbiro@ulb.ac.be>
 Maintainer: Mauro Birattari <mbiro@ulb.ac.be>
