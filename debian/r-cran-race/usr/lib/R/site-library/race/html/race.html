@@ -1,0 +1,234 @@
+<html><head><title>R: Racing methods for the selection of the best</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for race {race}"><tr><td>race {race}</td><td align="right">R Documentation</td></tr></table>
+<h2>Racing methods for the selection of the best</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Implementation of some racing methods for the empirical
+selection of the best. If the <font face="Courier New,Courier" color="#666666"><b>R</b></font> package <code>rpvm</code> is installed
+(and PVM is available, properly configured, and initialized), the
+evaluation of the candidates are performed in parallel on different
+hosts.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+race(wrapper.file, maxExp=0,
+        stat.test=c("friedman","t.bonferroni","t.holm","t.none"),
+           conf.level=0.95, first.test=5, interactive=TRUE,
+              log.file="", no.slaves=0,...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>wrapper.file</code></td>
+<td>
+The name of a file containing the definition of 
+the functions to be provided by the user: i.e.
+<code><a href="race.wrapper.html">race.wrapper</a></code> and <code><a href="race.info.html">race.info</a></code>. The file
+<code>wrapper.file</code> might also define the functions
+<code><a href="race.init.html">race.init</a></code> and <code><a href="race.describe.html">race.describe</a></code>.</td></tr>
+<tr valign="top"><td><code>maxExp</code></td>
+<td>
+Maximum number of experiments (i.e. evaluations of the
+function <code>race.wrapper</code>) that are allowed before selecting the
+best candidate. If <code>maxExp=0</code>, no limit is imposed... very
+unrealistic in practice.</td></tr>
+<tr valign="top"><td><code>stat.test</code></td>
+<td>
+Statistical test to be used for discarding inferior
+candidates.</td></tr>
+<tr valign="top"><td><code>conf.level</code></td>
+<td>
+The confidence level to be used for the statistical
+test.</td></tr>
+<tr valign="top"><td><code>first.test</code></td>
+<td>
+The first test for discarding inferior candidates is
+performed only when all candidates have been evaluated on a minimum
+number of tasks equal to <code>first.test</code>.</td></tr>
+<tr valign="top"><td><code>interactive</code></td>
+<td>
+If <code>TRUE</code>, print a progress report on the
+standard output.</td></tr>
+<tr valign="top"><td><code>log.file</code></td>
+<td>
+File for saving periodically the state of the race.</td></tr>
+<tr valign="top"><td><code>no.slaves</code></td>
+<td>
+When running under PVM, <code>no.slaves</code> specify the
+number of slaves to be spawned. If <code>no.slave=0</code> PVM is not used
+and all experiments are performed on the local host.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+All extra parameters are passed to the function
+<code><a href="race.init.html">race.init</a></code> defined by the user in the file
+<code>wrapper.file</code>.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+This package implemets some racing procedures for selecting
+from a set of candidate the one that is able to yield the best
+performance on a given set of tasks. The time available for selecting
+the best candidate is limited and, therefore, a brute-force approach is
+unfeasible.  The algorithm implemented in this package sequentially
+evaluates the set of candidatas on the available tasks while discards
+bad candidates as soon as statistically sufficient evidence is gathered
+against them.  The elimination of inferior candidates, speeds up the
+procedure and allows a more reliable evaluation of the promising ones.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+The output of <code>race</code> is a list containing the following
+components:
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>precis</code></td>
+<td>
+A string describing the race for documentation
+purposes.</td></tr>
+<tr valign="top"><td><code>results</code></td>
+<td>
+A matrix containing in position <code>[i,j]</code> the result
+obtained by candidate <code>j</code> on task <code>i</code>.</td></tr>
+<tr valign="top"><td><code>no.candidates</code></td>
+<td>
+Number of candidates at the beginning of the race.</td></tr>
+<tr valign="top"><td><code>no.tasks</code></td>
+<td>
+Number of tasks on which the selection was based.</td></tr>
+<tr valign="top"><td><code>no.subtasks</code></td>
+<td>
+Number of subtasks composing each tasks. Default=1</td></tr>
+<tr valign="top"><td><code>no.experiments</code></td>
+<td>
+Number of times that the function
+<code>race.wrapper</code> had to be call in order to select the best.</td></tr>
+<tr valign="top"><td><code>no.alive</code></td>
+<td>
+Number of candidates that completed the race, that is,
+number of candidates that had not been discarded at the moment in
+which the race was stopped.</td></tr>
+<tr valign="top"><td><code>alive</code></td>
+<td>
+List of the candidates that completed the race:
+no sufficient evidence was gathered, give that the test
+<code>stat.test</code> is adopted, for stating that these candidates are
+worse than the selected best.</td></tr>
+<tr valign="top"><td><code>alive.inTime</code></td>
+<td>
+Number of candidates in the race after each time
+step.</td></tr>
+<tr valign="top"><td><code>best</code></td>
+<td>
+The candidate selected in the race.</td></tr>
+<tr valign="top"><td><code>mean.best</code></td>
+<td>
+The average result of the best on the tasks
+considered.</td></tr>
+<tr valign="top"><td><code>description.best</code></td>
+<td>
+An object describing the selected candidate.</td></tr>
+<tr valign="top"><td><code>timestamp.start</code></td>
+<td>
+Time stamp of the beginning of the race.</td></tr>
+<tr valign="top"><td><code>timestamp.end</code></td>
+<td>
+Time stamp of the end of the race.</td></tr>
+</table>
+
+<h3>Note</h3>
+
+<p>
+Please notice that <code>race</code> is a <B>minimization</B> algorithm:
+it selects the candidate that obtains the smallest results on
+the various tasks considered.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+Mauro Birattari
+</p>
+
+
+<h3>References</h3>
+
+<p>
+O. Maron and A.W. Moore (1994) Hoeffding Races: Accelerating Model
+Selection Search for Classification and Function Approximation.
+<EM>Advances in Neural Information Processing Systems 6</EM>,
+pp. 59&ndash;66. Morgan Kaufmann.
+</p>
+<p>
+A.W. Moore and M.S. Lee (1994) Efficient Algorithms for Minimizing
+Cross Validation Error. <EM>International Conference on Machine Learning</EM>,
+pp. 190&ndash;198. Morgan Kaufmann.
+</p>
+<p>
+O. Maron and A.W. Moore (1997) The Racing Algorithm: Model Selection
+for Lazy Learners. <EM>Artificial Intelligence Review</EM>,
+<B>11</B>(1&ndash;5), pp. 193&ndash;225.
+</p>
+<p>
+M. Birattari, T. Stuetzle, L. Paquete, and K. Varrentrapp
+(2002) A Racing Algorithm for Configuring Metaheuristics. 
+<EM>GECCO 2002: Genetic and Evolutionary Computation Conference</EM>,
+pp. 11&ndash;18. Morgan Kaufmann.
+</p>
+<p>
+M. Birattari (2004) <EM>The Problem of Tuning Metaheuristics 
+as Seen from a Machine Learning Perspective</EM>. PhD Thesis, 
+Universite' Libre de Bruxelles, Brussels, Belgium.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="race.wrapper.html">race.wrapper</a></code>, <code><a href="race.info.html">race.info</a></code>,
+<code><a href="race.init.html">race.init</a></code>, <code><a href="race.describe.html">race.describe</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# The wrapper and init functions for this example are defined in the
+# file examples/example-wrapper.R in the installation directory of the
+# package.  Please, have a look at such file before implementing your
+# own wrapper.
+# This example require the package `nnet'
+if (require(nnet)&amp;&amp;require(datasets)){
+  example.wrapper&lt;-file.path(system.file(package="race"),
+                           "examples","example-wrapper.R")
+  # Run the race
+  race(example.wrapper)
+
+  # If the package `rpvm' is installed on your system and if PVM is
+  # properly installed and configured, you can try the following:
+  #race(example.wrapper,no.slaves=6)
+}
+</pre>
+
+
+
+<hr><div align="center">[Package <em>race</em> version 0.1.55 <a href="00Index.html">Index]</a></div>
+
+</body></html>

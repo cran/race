@@ -29,13 +29,13 @@
 # 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro #
 # ========================================================================= #
 
-# $Id: race.R,v 1.47 2004/04/02 12:41:57 mbiro Exp $ #
+# $Id: race.R,v 1.54 2005/03/30 12:40:42 mbiro Exp $ #
 
 # Configuration variables
 .race.warn.quiet<--1
 .race.warn.level<-1
-.race.slave.name<-"srace"
-.race.slave.dir<-path.expand(file.path(system.file(package = "race"),"slave"))
+.race.slave.sh<-path.expand(file.path(system.file(package = "race"),
+	"slave","srace.sh"))
 .slave.init.function<-"race.init"
 .slave.wrapper.function<-"race.wrapper"
 .slave.info.function<-"race.info"
@@ -45,16 +45,15 @@
 
 # Load library rpvm if available
 .race.warn.save<-getOption("warn")
-options(warn=.race.warn.quiet)
-.race.usePVM<-require(rpvm)
-options(warn=.race.warn.save)
+.race.usePVM<-require(rpvm,quietly=TRUE)
 
 # Conventional master-slave messages
 .race.MSG<-list(INIT       = 11,
-                WORK       = 22,
-                RESULT     = 33,
-                SERROR     = 44,  
-                EXIT       = 55,
+                NAME       = 22,
+                WORK       = 33,
+                RESULT     = 44,
+                SERROR     = 55,  
+                EXIT       = 66,
                 int2str    = function(x)
                             {return(names(.race.MSG)[match(x,.race.MSG)])})
 
@@ -82,7 +81,7 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
   if (!is.character(wrapper.file))
     stop("Option \"wrapper.file\" must be a string")
   wrapper.file<-path.expand(wrapper.file)       
-  if (substr(wrapper.file,1,1)!=.Platform$file.sep)
+  if (dirname(wrapper.file) == ".")
     wrapper.file<-file.path(getwd(),wrapper.file)
   try(source(wrapper.file,local=TRUE),silent=TRUE)
   if (!exists(.slave.wrapper.function,inherits=FALSE,mode="function")||
@@ -187,7 +186,7 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
       # race.info$extra is a non-compulsory string or paragraph.
       (!is.na(match("extra",names(race.info)))&&
        !is.character(race.info$extra)))
-    stop(paste("Function \"",.slave.wrapper.function,
+    stop(paste("Function \"",.slave.info.function,
                "\" returned an invalid object",sep=""))
 
   # Default for no.subtasks
@@ -199,6 +198,7 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
   no.candidates<-race.info$no.candidates
   no.tasks<-race.info$no.tasks
   no.subtasks<-race.info$no.subtasks   
+
   
   # Prepare a precis for documentation
   format.precis<-function(title,value){
@@ -264,6 +264,9 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
   if (interactive) 
     cat(paste(precis,"\n\n"))
 
+  if (maxExp && no.candidates>maxExp)
+    stop("Max number of experiments is smaller than number of candidates")
+
   check.result<-function(result){
     expected.length<-ifelse(length(no.subtasks)==1,
                             no.subtasks,
@@ -274,15 +277,23 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
   }
 
   if (.race.usePVM){
+    # The following shouldn't be necessary... but apparently it is:
+    library(rpvm)
+
     # Function for cleaning the PVM. To be called on exit
     killSlaves.exit<-function(){
       if (length(slaves)>0 || slaves>0){
-        .PVM.initsend()
-        for(s in slaves)
-          .PVM.send(s,.race.MSG$EXIT)
+        if (.PVM.initsend()==-1)
+          warning("Can't kill slaves")
+        else
+          for(s in slaves)
+            if (.PVM.send(s,.race.MSG$EXIT)==-1)
+              warning("Error while killing slave")
       }
       .PVM.exit()
     }
+
+
     
     # Enroll the master process into PVM
     if ((mytid<-.PVM.mytid())==-1)
@@ -291,22 +302,27 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
     on.exit(killSlaves.exit(),add=TRUE)
     
     # Spawn slaves
-    slaves<-.PVM.spawnR(ntask=no.slaves,
-                        slave=.race.slave.name,
-                        slavedir=.race.slave.dir)
+    cat ("\nTry to spawn slaves...\n")
+    slaves<-.PVM.spawn(task=.race.slave.sh,ntask=no.slaves)
     if (length(slaves)==1 && slaves==-1)
       stop("Can't spawn slaves")
     no.slaves<-length(slaves)
-    cat("Done.\n\n")
+
     
     # Initialize slaves
     if (.PVM.initsend()==-1 ||
         .PVM.pkstrvec(wrapper.file)==-1)
       stop("Error while initializing slave: can't prepare message")
-    for (current.slave in slaves)
+    for (current.slave in slaves){
       if (.PVM.send(current.slave,.race.MSG$INIT)==-1)
         stop("Error while initializing slave: can't send message")
-
+      if ((buf<-.PVM.recv(current.slave,.race.MSG$NAME))==-1)
+        stop("Error while initializing slave: can't get its name")
+      msg<-.PVM.bufinfo(buf)$msgtag
+      slave.name<-.PVM.upkstrvec()
+      cat(paste("\tSlave running on",slave.name,"\n"))
+    }
+    cat("Done.\n\n")
     # PVM function for starting a job
     job.start<-function(){
       current.candidate<-which.alive[no.jobs.submitted+1]
@@ -372,8 +388,10 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
     if (end)
       log<-c(log,list(timestamp.end=timestamp.current,
                       description.best=description.best,
-                      alive.inTime=apply(Results[1:no.subtasks.sofar,],
-                        1,function(u){sum(!(is.na(u)))})))
+                      alive.inTime=ifelse(no.subtasks.sofar>1,
+		      	apply(Results[1:no.subtasks.sofar,],
+                        	1,function(u){sum(!(is.na(u)))}),
+			sum(!is.na(Results[1,])))))
     else
       log<-c(log,list(timestamp.current=timestamp.current))
     return(log)
@@ -513,12 +531,13 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
                                 no.subtasks,
                                 no.subtasks[current.task])
     
-    subtasks.range<-
-      if(length(no.subtasks)==1)
+    if(length(no.subtasks)==1)
+      subtasks.range<-
         (current.task-1)*no.subtasks+1:no.subtasks
-      else
+    else
+      subtasks.range<-
         cumsum(c(0,no.subtasks))[current.task]+1:no.subtasks[current.task]
-
+    
     if (.race.usePVM){
       # Running under PVM 
       no.jobs.submitted<-0
@@ -559,7 +578,6 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
     if (no.tasks.sofar>=first.test) 
       switch(stat.test,
              friedman=aux.friedman(),
-             friedman2=aux.friedman2(),
              t.none=aux.ttest("none"),
              t.holm=aux.ttest("holm"),
              t.bonferroni=aux.ttest("bonferroni"))
@@ -610,17 +628,25 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
 
 if (.race.usePVM){
   .race.slave<-function(){
-    # Get parent id
-    myparent<-.PVM.parent()
+
+    # Be sure that rpvm is installed on slave
+    library(rpvm)
+
+    # Get Master id
+    myMaster<-.PVM.parent()
+    if (!myMaster)
+      stop("Can't get Master id")
   
     # Prepare function for reporting problems to Master
     all.done.properly<-FALSE
     report.slave.error<-function(){
       if (!all.done.properly){
-        cat("Some error occurred: reporting to Master\n")
-        .PVM.initsend()
-        .PVM.send(myparent,.race.MSG$SERROR)
+        warning("Some error occurred: reporting to Master")
+        if (.PVM.initsend()==-1 ||
+            .PVM.send(myMaster,.race.MSG$SERROR)==-1)
+          stop("Can't report to Master")
       }
+      .PVM.exit()
     }
     on.exit(report.slave.error())
   
@@ -635,20 +661,27 @@ if (.race.usePVM){
     .race.warn.save<-getOption("warn")
     on.exit(options(warn=.race.warn.save),add=TRUE)
     options(warn=.race.warn.level)
-      
+
     while(TRUE){
-      # Receive instruction from parent
-      buf<-.PVM.recv(myparent,-1)
-      # .PVM.bufinfo is rather noisy...
-      options(warn=.race.warn.quiet)
+      # Receive instruction from Master
+      if ((buf<-.PVM.recv(myMaster,-1))==-1)
+        stop("Error while listening to Master")
       msg<-.PVM.bufinfo(buf)$msgtag
-      options(warn=.race.warn.level)
-      # ...normal warn.level
       tag<-.race.MSG$int2str(msg)
     
       switch(tag,
              INIT={# Extract wrapper.file
                wrapper.file<-.PVM.upkstrvec()
+               # Answer to Master giving your name:
+               this.slave.name<-"Boh?"
+               if (.Platform$OS.type=="unix")
+                 this.slave.name<-system("hostname",intern=TRUE)
+               if (.Platform$OS.type=="windows")
+                 this.slave.name<-"a windows machine :("
+               if (.PVM.initsend()==-1 ||
+                   .PVM.pkstrvec(this.slave.name)==-1 ||
+                   .PVM.send(myMaster,.race.MSG$NAME)==-1)
+                 stop("Error while telling my humble name to Master")
                # Source wrapper.file
                cat(paste("Sourcing wrapper file:",wrapper.file,"\n"))
                source(wrapper.file,local=TRUE)
@@ -674,11 +707,12 @@ if (.race.usePVM){
                # Run job
                result<-do.call(.slave.wrapper.function,
                                list(candidate,task,race.data))
-              # Return result to parent
-               .PVM.initsend()
-               .PVM.pkint(candidate)
-               .PVM.pkdblvec(result)
-               .PVM.send(myparent,.race.MSG$RESULT)
+              # Return result to Master
+               if (.PVM.initsend()==-1 ||
+                   .PVM.pkint(candidate)==-1 ||
+                   .PVM.pkdblvec(result)==-1 ||
+                   .PVM.send(myMaster,.race.MSG$RESULT)==-1)
+                 stop("Error while reporting results to Master")
              },
              EXIT={all.done.properly<-TRUE
                    break})

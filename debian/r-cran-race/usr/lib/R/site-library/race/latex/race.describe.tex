@@ -1,0 +1,44 @@
+\HeaderA{race.describe}{Describe a candidate}{race.describe}
+\keyword{misc}{race.describe}
+\begin{Description}\relax
+This function may be provided by the user for giving a
+description of a candidate. It's definition has to be given
+in the same file in which the functions \code{race.wrapper} and
+\code{race.info} are defined.
+The name of such file has to be passed as first argument to the
+function \code{race}.
+\end{Description}
+\begin{Usage}
+\begin{verbatim}race.describe(candidate,data)\end{verbatim}
+\end{Usage}
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{candidate}] The candidate for which a description is to be
+returned.
+\item[\code{data}] It is the object of type \code{list} (possibly empty)
+returned by \code{\LinkA{race.init}{race.init}}, if the latter is defined by the
+user.
+\end{ldescription}
+\end{Arguments}
+\begin{Value}
+The function \code{race.describe} should return an object
+describing the selected candidate. Such object will be printed by
+\code{race} through the function \code{print}.
+\end{Value}
+\begin{Author}\relax
+Mauro Birattari
+\end{Author}
+\begin{SeeAlso}\relax
+\code{\LinkA{race}{race}}, \code{\LinkA{race.init}{race.init}}
+\end{SeeAlso}
+\begin{Examples}
+\begin{ExampleCode}
+# Please have a look at the function `race.describe'
+# defined in the file `example-wrapper.R':
+local({
+  source(file.path(system.file(package="race"),
+                           "examples","example-wrapper.R"),local=TRUE);
+  print(race.describe)})
+\end{ExampleCode}
+\end{Examples}
+

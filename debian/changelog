@@ -1,0 +1,9 @@
+r-cran-race (0.1.55) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Mauro Birattari <mbiro@ulb.ac.be>  Sat, 19 Feb 2005 17:07:55 +0100
+
+Local variables:
+mode: debian-changelog
+End:

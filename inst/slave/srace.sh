@@ -1,5 +1,6 @@
-# ---------------------------------------- -*- mode: r; mode: font-lock -*- #
-# srace.R                                                   Slave R process #
+#! /bin/sh
+# --------------------------------------- -*- mode: sh; mode: font-lock -*- #
+# srace.sh                                                  Slave R process #
 # ------------------------------------------------------------------------- #
                                                                              
 # ========================================================================= #
@@ -29,13 +30,12 @@
 # 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro #
 # ========================================================================= #
 
-# $Id: srace.R,v 1.10 2003/09/29 09:38:29 mbiro Exp $ #
+# $Id: srace.sh,v 1.2 2005/02/22 12:55:01 waki Exp $ #
 
+#outfile=/tmp/slave.$(hostname).$$.Rout
+outfile=/dev/null
+
+${RPROG:-R} --no-save --no-restore --slave >$outfile 2>&1 <<EOF
 library(race)
-
-# Start slave
 .race.slave()
-
-# Exit
-.PVM.exit()
-quit(save="no")
+EOF

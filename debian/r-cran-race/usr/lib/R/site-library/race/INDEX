@@ -1,0 +1,5 @@
+race                    Racing methods for the selection of the best
+race.describe           Describe a candidate
+race.info               Provide information on the race
+race.init               Initialization function
+race.wrapper            Test a candidate on a task

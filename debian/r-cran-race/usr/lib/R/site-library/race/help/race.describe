@@ -1,0 +1,46 @@
+race.describe              package:race              R Documentation
+
+_D_e_s_c_r_i_b_e _a _c_a_n_d_i_d_a_t_e
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     This function may be provided by the user for giving a description
+     of a candidate. It's definition has to be given in the same file
+     in which the functions 'race.wrapper' and 'race.info' are defined.
+     The name of such file has to be passed as first argument to the
+     function 'race'.
+
+_U_s_a_g_e:
+
+     race.describe(candidate,data)
+
+_A_r_g_u_m_e_n_t_s:
+
+candidate: The candidate for which a description is to be returned.
+
+    data: It is the object of type 'list' (possibly empty) returned by
+          'race.init', if the latter is defined by the user.
+
+_V_a_l_u_e:
+
+     The function 'race.describe' should return an object describing
+     the selected candidate. Such object will be printed by 'race'
+     through the function 'print'.
+
+_A_u_t_h_o_r(_s):
+
+     Mauro Birattari
+
+_S_e_e _A_l_s_o:
+
+     'race', 'race.init'
+
+_E_x_a_m_p_l_e_s:
+
+     # Please have a look at the function `race.describe'
+     # defined in the file `example-wrapper.R':
+     local({
+       source(file.path(system.file(package="race"),
+                                "examples","example-wrapper.R"),local=TRUE);
+       print(race.describe)})
+

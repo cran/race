@@ -29,7 +29,7 @@
 % 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro %
 % ========================================================================= %
 
-% $Id: race.Rd,v 1.20 2004/02/05 15:28:06 mbiro Exp $ %
+% $Id: race.Rd,v 1.22 2005/02/19 14:09:01 waki Exp $ %
 
 \name{race}
 \alias{race}
@@ -163,6 +163,10 @@ race(wrapper.file, maxExp=0,
   (2002) A Racing Algorithm for Configuring Metaheuristics. 
   \emph{GECCO 2002: Genetic and Evolutionary Computation Conference},
   pp. 11--18. Morgan Kaufmann.
+  
+  M. Birattari (2004) \emph{The Problem of Tuning Metaheuristics 
+  as Seen from a Machine Learning Perspective}. PhD Thesis, 
+  Universite' Libre de Bruxelles, Brussels, Belgium. 
 }
 
 \examples{
@@ -171,7 +175,7 @@ race(wrapper.file, maxExp=0,
 # package.  Please, have a look at such file before implementing your
 # own wrapper.
 # This example require the package `nnet'
-if (require(nnet)){
+if (require(nnet)&&require(datasets)){
   example.wrapper<-file.path(system.file(package="race"),
                            "examples","example-wrapper.R")
   # Run the race

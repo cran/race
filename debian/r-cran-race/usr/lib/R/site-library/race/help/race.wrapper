@@ -1,0 +1,61 @@
+race.wrapper              package:race              R Documentation
+
+_T_e_s_t _a _c_a_n_d_i_d_a_t_e _o_n _a _t_a_s_k
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     This function is to be provided by the user. It's definition has
+     to be given (together with the one of 'race.info') in a file, and
+     the name of such file has to be passed as first argument to the
+     function 'race'.
+
+_U_s_a_g_e:
+
+     race.wrapper(candidate,task,data)
+
+_A_r_g_u_m_e_n_t_s:
+
+candidate: The candidate to be evaluated: a number between 1 and
+          'no.candidates', where 'no.candidates' is the number of
+          candidates and is to be defined within the function
+          'race.wrapper' itself.
+
+    task: The task on which to the candidate should be evaluated: a
+          number between 1 and 'no.tasks', where 'no.tasks' is the
+          number of tasks available for testing, and is to be defined
+          within the function 'race.wrapper' itself.
+
+    data: It is the object of type 'list' (possibly empty) returned by
+          'race.init', if the latter is defined by the user.
+
+_V_a_l_u_e:
+
+     A number: the result obtained by the given candidate at the given
+     task. If 'no.subtasks>1' (see 'race.info'), the function is
+     expected to return a vector of length equal to 'no.subtasks' where
+     the component 'k' of such vector is the result obtained by the
+     given candidate on the 'k'-th subtask composing the given task.
+
+_N_o_t_e:
+
+     Please notice that 'race' is a *minimization* algorithm: it
+     selects the candidate that obtains the smallest results on the
+     various tasks considered.
+
+_A_u_t_h_o_r(_s):
+
+     Mauro Birattari
+
+_S_e_e _A_l_s_o:
+
+     'race', 'race.init', 'race.info'
+
+_E_x_a_m_p_l_e_s:
+
+     # Please have a look at the function `race.wrapper'
+     # defined in the file `example-wrapper.R':
+     local({
+       source(file.path(system.file(package="race"),
+                                "examples","example-wrapper.R"),local=TRUE);
+       print(race.wrapper)})
+

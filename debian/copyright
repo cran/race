@@ -1,0 +1,31 @@
+This is the Debian GNU/Linux r-cran-race package, an GNU R
+implementation of some racing methods for the empirical selection of
+the best. 
+The package is written and maintained by Mauro Birattari <mbiro@ulb.ac.be>
+
+The package was originally released as a CRAN package. It was renamed
+from its upstream name 'race' to 'r-cran-race' to fit the pattern of
+CRAN (and non-CRAN) packages for R.
+
+The original source can always be found at:
+	http://cran.r-project.org/src/contrib/
+
+Copyright (C) 2003  Mauro Birattari
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this package; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  02111-1307, USA.
+
+On Debian systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL'.
