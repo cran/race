@@ -29,7 +29,7 @@
 # 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro #
 # ========================================================================= #
 
-# $Id: race.R,v 1.45 2004/02/07 10:41:41 mbiro Exp $ #
+# $Id: race.R,v 1.46 2004/03/23 12:07:52 mbiro Exp $ #
 
 # Configuration variables
 .race.warn.quiet<--1
@@ -126,10 +126,11 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
       (!is.logical(interactive) || length(interactive)!=1))
     stop("interactive must be a logical")
 
-  # Check argument: log.file  
-  if (!missing(log.file) && (log.file!="") && 
-      (system(paste("touch",log.file),ignore.stderr=TRUE)!=0))
-    stop(paste("I cannot create file ",log.file,sep=""))
+  # Check argument: log.file
+  if (.Platform$OS.type=="unix")
+    if (!missing(log.file) && (log.file!="") && 
+        (system(paste("touch",log.file),ignore.stderr=TRUE)!=0))
+      stop(paste("I cannot create file ",log.file,sep=""))
   
   # Check argument: no.slaves
   if (!missing(no.slaves) &&
@@ -624,9 +625,12 @@ if (.race.usePVM){
     on.exit(report.slave.error())
   
     # hostname for documentation
-    cat(paste("\nSlave running on host:",
-              system("hostname",intern=TRUE),"\n\n"))
-  
+    if (.Platform$OS.type=="unix")
+      cat(paste("\nSlave running on host:",
+                system("hostname",intern=TRUE),"\n\n"))
+    if (.Platform$OS.type=="windows")
+      cat(paste("\nSlave running a windows machine :(\n\n"))
+    
     # Change warning behavior
     .race.warn.save<-getOption("warn")
     on.exit(options(warn=.race.warn.save),add=TRUE)
