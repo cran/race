@@ -29,8 +29,6 @@
 % 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro %
 % ========================================================================= %
 
-% $Id: race.Rd,v 1.22 2005/02/19 14:09:01 waki Exp $ %
-
 \name{race}
 \alias{race}
 

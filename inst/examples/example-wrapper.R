@@ -29,8 +29,6 @@
 # 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro #
 # ========================================================================= #
 
-# $Id: example-wrapper.R,v 1.11 2004/05/24 14:32:32 mbiro Exp $ #
-
 race.init<-function(){
   # Load libraries and data
   library(nnet) 

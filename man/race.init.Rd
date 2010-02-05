@@ -29,24 +29,18 @@
 % 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro %
 % ========================================================================= %
 
-% $Id: race.init.Rd,v 1.11 2003/09/30 07:47:15 mbiro Exp $ %
-
 \name{race.init}
 \alias{race.init}
 
 \title{Initialization function}
 
-\description{This function may be provided by the user for initializing
-  the computation of the slave processes. It's definition has to be given
-  in the same file in which the functions \code{race.wrapper} and
-  \code{race.info} are defined.
+\description{The function \preformatted{race.init()} may be provided
+  by the user for initializing the computation of the slave
+  processes. It's definition has to be given in the same file in which
+  the functions \code{race.wrapper} and \code{race.info} are defined.
   The name of such file has to be passed as first argument to the
-  function \code{race}.
-}
-
-\synopsis{}
-\usage{race.init()}
-          
+  function \code{race}.}
+         
 \arguments{The function \code{race.init} has to be called with no
 arguments.}
 
@@ -58,7 +52,7 @@ arguments.}
   \code{race.wrapper}, \code{race.info}, and/or
   \code{race.describe}. The output of
   \code{race.init} will be passed to these functions.}
-}
+
 
 \examples{
 # Please have a look at the function `race.init'

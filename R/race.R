@@ -29,8 +29,6 @@
 # 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro #
 # ========================================================================= #
 
-# $Id: race.R,v 1.54 2005/03/30 12:40:42 mbiro Exp $ #
-
 # Configuration variables
 .race.warn.quiet<--1
 .race.warn.level<-1
@@ -444,10 +442,12 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
       V1<-Results[1:(no.subtasks.sofar),which.alive[1]]
       V2<-Results[1:(no.subtasks.sofar),which.alive[2]]
       PVAL<-wilcox.test(V1,V2,paired=TRUE,exact=FALSE)$p.value
+      D<-V1-V2
+      w.stat<-sum(sign(D)*rank(abs(D)))
       if (!is.nan(PVAL)&&!is.na(PVAL)&&(PVAL<1-conf.level)){
         if (interactive)
           cat("|-|")
-        if (median(V1-V2)<0){
+        if (w.stat<0){
           best<<-which.alive[1]
           alive[which.alive[2]]<<-FALSE
         }else{
@@ -457,7 +457,7 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
       }else{
         if (interactive)
           cat("|=|")
-        if (median(V1-V2)<0){
+        if (w.stat<0){
           best<<-which.alive[1]
         }else{
           best<<-which.alive[2]

@@ -29,23 +29,17 @@
 % 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro %
 % ========================================================================= %
 
-% $Id: race.info.Rd,v 1.6 2003/11/11 16:47:20 mbiro Exp $ %
-
 \name{race.info}
 \alias{race.info}
 
 \title{Provide information on the race}
 
-\description{This function is to be provided by the user. It's
-  definition has to be given (together with the one of
-  \code{\link{race.wrapper}}) in a file, and the name of such file
-  has to be passed as first argument to the function \code{race}.
-}
+\description{The function \preformatted{race.info(data)} is to be
+  provided by the user. It's definition has to be given (together with
+  the one of \code{\link{race.wrapper}}) in a file, and the name of
+  such file has to be passed as first argument to the function
+  \code{race}.}
 
-\synopsis{}
-\usage{race.info(data)}
-
-          
 \arguments{
   \item{data}{It is the object of type \code{list} (possibly empty)
     returned by \code{\link{race.init}}, if the latter is defined by the

@@ -29,24 +29,18 @@
 % 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro %
 % ========================================================================= %
 
-% $Id: race.describe.Rd,v 1.5 2003/09/30 07:47:15 mbiro Exp $ %
-
 \name{race.describe}
 \alias{race.describe}
 
 \title{Describe a candidate}
 
-\description{This function may be provided by the user for giving a
-  description of a candidate. It's definition has to be given
-  in the same file in which the functions \code{race.wrapper} and
-  \code{race.info} are defined.
+\description{The function \preformatted{race.describe(candidate,data)}
+  may be provided by the user for giving a description of a
+  candidate. It's definition has to be given in the same file in which
+  the functions \code{race.wrapper} and \code{race.info} are defined.
   The name of such file has to be passed as first argument to the
-  function \code{race}.
-}
-
-\synopsis{}
-\usage{race.describe(candidate,data)}
-          
+  function \code{race}.  }
+         
 \arguments{
   \item{candidate}{The candidate for which a description is to be
     returned.}

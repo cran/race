@@ -30,8 +30,6 @@
 # 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro #
 # ========================================================================= #
 
-# $Id: srace.sh,v 1.2 2005/02/22 12:55:01 waki Exp $ #
-
 #outfile=/tmp/slave.$(hostname).$$.Rout
 outfile=/dev/null
 

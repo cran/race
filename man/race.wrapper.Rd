@@ -29,22 +29,17 @@
 % 1050 Brussels, Belgium                     http://iridia.ulb.ac.be/~mbiro %
 % ========================================================================= %
 
-% $Id: race.wrapper.Rd,v 1.16 2003/10/15 13:13:41 mbiro Exp $ %
-
 \name{race.wrapper}
 \alias{race.wrapper}
 
 \title{Test a candidate on a task}
 
-\description{This function is to be provided by the user. It's
-  definition has to be given (together with the one of \code{race.info})
-  in a file, and the name of such file has to
-  be passed as first argument to the function \code{race}.
-}
+\description{The function
+  \preformatted{race.wrapper(candidate,task,data)} is to be provided
+  by the user. It's definition has to be given (together with the one
+  of \code{race.info}) in a file, and the name of such file has to be
+  passed as first argument to the function \code{race}.  }
 
-\synopsis{}
-\usage{race.wrapper(candidate,task,data)}
-          
 \arguments{
   \item{candidate}{The candidate to be evaluated: a number between 1 and
     \code{no.candidates}, where \code{no.candidates} is the number of
