@@ -415,7 +415,7 @@ race<-function(wrapper.file=stop("Argument \"wrapper.file\" is mandatory"),
                  - (sum(unlist(lapply(TIES, function (u) {u^3 - u}))) /
                     (k - 1))))
     PARAMETER<-k-1
-    PVAL<-pchisq(STATISTIC, PARAMETER, lower = FALSE)
+    PVAL<-pchisq(STATISTIC, PARAMETER, lower.tail = FALSE)
       
     if (!is.nan(PVAL) && (PVAL<alpha)){
       if (interactive)

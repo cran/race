@@ -1,0 +1,13 @@
+9ec53ca8b99fd815d0b1836caf4c464a *DESCRIPTION
+9fdfeb11f7ddba6f3aab9aaa6b1ac5dd *NAMESPACE
+ee0ce5939e7b1f12f2c954c81e11b850 *R/race.R
+a6d48bdbee82ee851b5e7db61942b8da *inst/ACKNOWLEDGMENTS
+94d55d512a9ba36caa9b7df079bae19f *inst/COPYING
+49f1e76004b16ffe4271735d1877c1b2 *inst/COPYRIGHTS
+c77c7a945436b95bacef0cda6f9a9710 *inst/examples/example-wrapper.R
+f5dd8880cf10695f24c558c6fd23c928 *inst/slave/srace.sh
+4a558c096b305deed77113ea7da2deca *man/race.Rd
+a890332c9e61989668278287b175732b *man/race.describe.Rd
+106c9ad2cff11518bb7d7b6f09d11fd5 *man/race.info.Rd
+bf5f2e05ec4297ff08128f74c1145cfe *man/race.init.Rd
+fb6b700b241d76c27d9bac5f9a7eb798 *man/race.wrapper.Rd
